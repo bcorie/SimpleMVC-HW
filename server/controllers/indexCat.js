@@ -1,9 +1,7 @@
 // pull in our models. This will automatically load the index.js from that folder
-const dogModel = require('../models/Dog');
-const catModel = require('../models/Cat');
+const models = require('../models');
 
-const { Dog } = dogModel;
-const { Cat } = catModel;
+const { Cat } = models;
 
 const hostIndex = async (req, res) => {
   let name = 'unknown';
@@ -44,12 +42,12 @@ const hostPage3 = (req, res) => {
   res.render('page3');
 };
 
-const getDogName = async (req, res) => {
+const getName = async (req, res) => {
   try {
-    const doc = await Dog.findOne({})
+    const doc = await Cat.findOne({})
       .sort({ createdDate: 'descending' }).lean().exec();
     if (!doc) {
-      return res.status(404).json({ error: 'No dog found' });
+      return res.status(404).json({ error: 'No cat found' });
     }
     return res.json({ name: doc.name });
   } catch (err) {
@@ -60,56 +58,54 @@ const getDogName = async (req, res) => {
   }
 };
 
-const setDogName = async (req, res) => {
-  if (!req.body.name || !req.body.breed || !req.body.age) {
+const setName = async (req, res) => {
+  if (!req.body.firstname || !req.body.lastname || !req.body.beds) {
     return res.status(400).json({
-      error: 'name, breed, and age are all required',
+      error: 'firstname,lastname and beds are all required',
     });
   }
 
-  const dogData = {
-    name: req.body.name,
-    breed: req.body.breed,
-    age: req.body.age,
+  const catData = {
+    name: `${req.body.firstname} ${req.body.lastname}`,
+    bedsOwned: req.body.beds,
   };
 
-  const newDog = new Dog(dogData);
-  console.log(newDog);
+  const newCat = new Cat(catData);
+  console.log(newCat);
 
   try {
     // waits at await until action is complete
     // must be in an async function
-    await newDog.save();
+    await newCat.save();
     return res.status(201).json({
-      name: newDog.name,
-      breed: newDog.breed,
-      age: newDog.age,
+      name: newCat.name,
+      beds: newCat.bedsOwned,
     });
   } catch (err) {
     console.log(err);
-    return res.status(500).json({ error: 'failed to create dog' });
+    return res.status(500).json({ error: 'failed to create cat' });
   }
 };
 
-const searchDogName = async (req, res) => {
+const searchName = async (req, res) => {
   if (!req.query.name) {
     return res.status(400).json({ error: 'Name is required to perform a search' });
   }
   try {
-    const doc = await Dog.findOne({ name: req.query.name }).select('name breed age').exec();
+    const doc = await Cat.findOne({ name: req.query.name }).select('name bedsOwned').exec();
     // doc is null if nothing found, so create edge case for null value
     if (!doc) {
-      return res.status(404).json({ error: 'No dog found' });
+      return res.status(404).json({ error: 'No cat found' });
     }
-    return res.json({ name: doc.name, breed: doc.breed, age: doc.age });
+    return res.json({ name: doc.name, beds: doc.bedsOwned });
   } catch (err) {
     console.log(err);
     return res.status(500).json({ error: 'Something went wrong' });
   }
 };
 
-const updateLastDog = (req, res) => {
-  const updatePromise = Dog.findOneAndUpdate({}, { $inc: { age: 1 } }, {
+const updateLast = (req, res) => {
+  const updatePromise = Cat.findOneAndUpdate({}, { $inc: { bedsOwned: 1 } }, {
     returnDocument: 'after',
     sort: {
       createdDate: 'descending',
@@ -117,8 +113,7 @@ const updateLastDog = (req, res) => {
   }).lean().exec();
   updatePromise.then((doc) => res.json({
     name: doc.name,
-    breed: doc.breed,
-    age: doc.age,
+    beds: doc.bedsOwned,
   }));
   updatePromise.catch((err) => {
     console.log(err);
@@ -137,9 +132,9 @@ module.exports = {
   page1: hostPage1,
   page2: hostPage2,
   page3: hostPage3,
-  getDogName,
-  setDogName,
-  updateLastDog,
-  searchDogName,
+  getName,
+  setName,
+  updateLast,
+  searchName,
   notFound,
 };

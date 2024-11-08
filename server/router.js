@@ -1,19 +1,24 @@
-const controllers = require('./controllers');
+const controllersC = require('./controllers/indexCat.js');
+const controllersD = require('./controllers/index.js');
 
 const router = (app) => {
-  app.get('/page1', controllers.page1);
-  app.get('/page2', controllers.page2);
-  app.get('/page3', controllers.page3);
-  app.get('/getName', controllers.getName);
-  app.get('/findByName', controllers.searchName);
+  app.get('/page1', controllersC.page1);
+  app.get('/page2', controllersC.page2);
+  app.get('/page3', controllersD.page3);
+  app.get('/getName', controllersC.getName);
+  app.get('/getDogName', controllersD.getDogName);
+  app.get('/findByName', controllersC.searchName);
+  app.get('/findByDogName', controllersD.searchDogName);
 
-  app.get('/', controllers.index);
+  app.get('/', controllersC.index);
 
-  app.get('/*', controllers.notFound);
+  app.get('/*', controllersC.notFound);
 
-  app.post('/setName', controllers.setName);
+  app.post('/setName', controllersC.setName);
+  app.post('/setDogName', controllersD.setDogName);
 
-  app.post('/updateLast', controllers.updateLast);
+  app.post('/updateLast', controllersC.updateLast);
+  app.post('/updateLastDog', controllersD.updateLastDog);
 };
 
 // export the router function

@@ -10,29 +10,39 @@ const router = require('./router.js');
 
 const port = process.env.PORT || process.env.NODE_PORT || 3000;
 
+const dbURI = process.env.MONGODB_URI || 'mongodb+srv://dbAdmin:admin@richmedia.1a1ll.mongodb.net/';
 
-const app = express();
+mongoose.connect(dbURI)
+  .then((instance) => {
+    console.log(`mongoose loaded - version - ${instance.version}`);
+    const app = express();
 
-app.use('/assets', express.static(path.resolve(`${__dirname}/../client/`)));
+    app.use('/assets', express.static(path.resolve(`${__dirname}/../client/`)));
 
-app.use(compression());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+    app.use(compression());
+    app.use(bodyParser.urlencoded({ extended: false }));
+    app.use(bodyParser.json());
 
-app.engine('handlebars', expressHandlebars.engine({
-  defaultLayout: '',
-}));
-app.set('view engine', 'handlebars');
-app.set('views', `${__dirname}/../views`);
+    app.engine('handlebars', expressHandlebars.engine({
+      defaultLayout: '',
+    }));
+    app.set('view engine', 'handlebars');
+    app.set('views', `${__dirname}/../views`);
 
-app.use(favicon(`${__dirname}/../client/img/favicon.png`));
+    app.use(favicon(`${__dirname}/../client/img/favicon.png`));
 
-router(app);
+    router(app);
 
-app.listen(port, (err) => {
-  if (err) {
-    throw err;
-  }
-  console.log(`Listening on port ${port}`);
-});
-
+    app.listen(port, (err) => {
+      if (err) {
+        throw err;
+      }
+      console.log(`Listening on port ${port}`);
+    });
+  })
+  .catch((err) => {
+    if (err) {
+      console.log('Could not connect to database');
+      throw err;
+    }
+  });
