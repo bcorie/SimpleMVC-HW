@@ -5,6 +5,7 @@ const router = (app) => {
   app.get('/page1', controllersC.page1);
   app.get('/page2', controllersC.page2);
   app.get('/page3', controllersD.page3);
+  app.get('/page4', controllersD.page4);
   app.get('/getName', controllersC.getName);
   app.get('/getDogName', controllersD.getName);
   app.get('/findByName', controllersC.searchName);
