@@ -6,19 +6,19 @@ const router = (app) => {
   app.get('/page2', controllersC.page2);
   app.get('/page3', controllersD.page3);
   app.get('/getName', controllersC.getName);
-  app.get('/getDogName', controllersD.getDogName);
+  app.get('/getDogName', controllersD.getName);
   app.get('/findByName', controllersC.searchName);
-  app.get('/findByDogName', controllersD.searchDogName);
+  app.get('/findByDogName', controllersD.searchName);
 
   app.get('/', controllersC.index);
 
   app.get('/*', controllersC.notFound);
 
   app.post('/setName', controllersC.setName);
-  app.post('/setDogName', controllersD.setDogName);
+  app.post('/setDogName', controllersD.setName);
 
   app.post('/updateLast', controllersC.updateLast);
-  app.post('/updateLastDog', controllersD.updateLastDog);
+  app.post('/updateLastDog', controllersD.updateLast);
 };
 
 // export the router function

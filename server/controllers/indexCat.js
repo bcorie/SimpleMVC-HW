@@ -61,7 +61,7 @@ const getName = async (req, res) => {
 const setName = async (req, res) => {
   if (!req.body.firstname || !req.body.lastname || !req.body.beds) {
     return res.status(400).json({
-      error: 'firstname,lastname and beds are all required',
+      error: 'firstname, lastname and beds are all required',
     });
   }
 

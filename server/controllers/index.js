@@ -1,9 +1,7 @@
 // pull in our models. This will automatically load the index.js from that folder
-const dogModel = require('../models/Dog');
-const catModel = require('../models/Cat');
+const models = require('../models');
 
-const { Dog } = dogModel;
-const { Cat } = catModel;
+const { Cat, Dog } = models;
 
 const hostIndex = async (req, res) => {
   let name = 'unknown';
@@ -44,7 +42,7 @@ const hostPage3 = (req, res) => {
   res.render('page3');
 };
 
-const getDogName = async (req, res) => {
+const getName = async (req, res) => {
   try {
     const doc = await Dog.findOne({})
       .sort({ createdDate: 'descending' }).lean().exec();
@@ -60,7 +58,7 @@ const getDogName = async (req, res) => {
   }
 };
 
-const setDogName = async (req, res) => {
+const setName = async (req, res) => {
   if (!req.body.name || !req.body.breed || !req.body.age) {
     return res.status(400).json({
       error: 'name, breed, and age are all required',
@@ -91,7 +89,7 @@ const setDogName = async (req, res) => {
   }
 };
 
-const searchDogName = async (req, res) => {
+const searchName = async (req, res) => {
   if (!req.query.name) {
     return res.status(400).json({ error: 'Name is required to perform a search' });
   }
@@ -108,7 +106,7 @@ const searchDogName = async (req, res) => {
   }
 };
 
-const updateLastDog = (req, res) => {
+const updateLast = (req, res) => {
   const updatePromise = Dog.findOneAndUpdate({}, { $inc: { age: 1 } }, {
     returnDocument: 'after',
     sort: {
@@ -137,9 +135,9 @@ module.exports = {
   page1: hostPage1,
   page2: hostPage2,
   page3: hostPage3,
-  getDogName,
-  setDogName,
-  updateLastDog,
-  searchDogName,
+  getName,
+  setName,
+  updateLast,
+  searchName,
   notFound,
 };
